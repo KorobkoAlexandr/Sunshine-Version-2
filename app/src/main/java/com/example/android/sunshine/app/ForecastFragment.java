@@ -142,7 +142,14 @@ public class ForecastFragment extends Fragment {
         /**
          * Prepare the weather high/lows for presentation.
          */
-        private String formatHighLows(double high, double low) {
+        private String formatHighLows(double high, double low, String unitType) {
+
+            if(unitType.equals(getString(R.string.pref_units_imperial))){
+                high = (high * 1.8) + 32;
+                low = (low * 1.8) + 32;
+            } else if (!unitType.equals(getString(R.string.pref_units_imperial))) {
+                Log.d(LOG_TAG, "Unit type not found: " + unitType);
+            }
             // For presentation, assume the user doesn't care about tenths of a degree.
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
@@ -190,6 +197,10 @@ public class ForecastFragment extends Fragment {
             dayTime = new Time();
 
             String[] resultStrs = new String[numDays];
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unitType = sharedPreferences.getString(getString(R.string.pref_units_key),
+                    getString(R.string.pref_units_metric));
             for (int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
@@ -217,19 +228,20 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
-                highAndLow = formatHighLows(high, low);
+                highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
-            }
-
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
             }
             return resultStrs;
 
         }
-
         @Override
         protected String[] doInBackground(String... params) {
+
+            // If there's no zip code, there's nothing to look up.  Verify size of params.
+            if (params.length == 0) {
+                return null;
+            }
+
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -263,11 +275,6 @@ public class ForecastFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-                Log.v(LOG_TAG, "Built URI " + builtUri);
-
-//                String baseUrl = "q=94043&mode=json&units=metric&cnt=7";
-//                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-//                URL url = new URL(baseUrl.concat(apiKey));
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -296,7 +303,6 @@ public class ForecastFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
-
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
@@ -332,9 +338,8 @@ public class ForecastFragment extends Fragment {
                 for (String dayForecastStr : result) {
                     mForecastAdapter.add(dayForecastStr);
                 }
+                // New data is back from the server.  Hooray!
             }
         }
     }
-
-
 }
