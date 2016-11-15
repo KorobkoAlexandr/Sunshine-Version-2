@@ -18,6 +18,9 @@
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="title_activity_detail">Details</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="action_map">Map location</string>
+    <string name="action_share">Share</string>
+
 
     <!--Preferences string values for general location settings-->
     <string name="pref_location_label">Location</string>
