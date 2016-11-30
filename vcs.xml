@@ -18,8 +18,12 @@
           <option name="url" value="https://github.com/udacity/DictionaryProviderExample.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/javaee-samples/javaee7-samples" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
-    <option name="cloneParentDir" value="D:\Programming\Android_Course\developer.android.com\" />
+    <option name="cloneParentDir" value="D:\Programming\JavaEE" />
   </component>
 </application>
