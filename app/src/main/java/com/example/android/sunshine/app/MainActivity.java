@@ -30,15 +30,29 @@ public class MainActivity extends ActionBarActivity {
 
     private String mLocation;
 
+    private String mLocation;
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mLocation = Utility.getPreferredLocation(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLocation = Utility.getPreferredLocation(this);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
                     .commit();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if ( Utility.getPreferredLocation(this) != mLocation) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            ff.onLocationChanged();
+            mLocation = Utility.getPreferredLocation(this);
         }
     }
 
