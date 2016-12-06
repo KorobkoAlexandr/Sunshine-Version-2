@@ -26,9 +26,7 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private final String FORECASTFRAGMENT_TAG = "FFTAG";
 
-    private String mLocation;
 
     private String mLocation;
     private final String FORECASTFRAGMENT_TAG = "FFTAG";
@@ -46,15 +44,6 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if ( Utility.getPreferredLocation(this) != mLocation) {
-            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
-            ff.onLocationChanged();
-            mLocation = Utility.getPreferredLocation(this);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
