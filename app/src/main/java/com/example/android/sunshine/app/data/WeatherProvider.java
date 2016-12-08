@@ -115,21 +115,19 @@ public class WeatherProvider extends ContentProvider {
         testUriMatcher test within TestUriMatcher.
      */
     static UriMatcher buildUriMatcher() {
-        // I know what you're thinking.  Why create a UriMatcher when you can use regular
-        // expressions instead?  Because you're not crazy, that's why.
-
-        // All paths added to the UriMatcher have a corresponding code to return when a match is
-        // found.  The code passed into the constructor represents the code to return for the root
-        // URI.  It's common to use NO_MATCH as the code for this case.
+        // 1) The code passed into the constructor represents the code to return for the root
+        // URI.  It's common to use NO_MATCH as the code for this case. Add the constructor below.
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = WeatherContract.CONTENT_AUTHORITY;
 
-        // For each type of URI you want to add, create a corresponding code.
-        matcher.addURI(authority, WeatherContract.PATH_WEATHER, WEATHER);
+        // 2) Use the addURI function to match each of the types.  Use the constants from
+        // WeatherContract to help define the types to the UriMatcher.
+        matcher.addURI(authority,WeatherContract.PATH_WEATHER, WEATHER);
         matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*", WEATHER_WITH_LOCATION);
         matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*/#", WEATHER_WITH_LOCATION_AND_DATE);
 
         matcher.addURI(authority, WeatherContract.PATH_LOCATION, LOCATION);
+        // 3) Return the new matcher!
         return matcher;
     }
 
@@ -196,8 +194,7 @@ public class WeatherProvider extends ContentProvider {
                         selectionArgs,
                         null,
                         null,
-                        sortOrder
-                );
+                        sortOrder);
                 break;
             }
             // "location"
@@ -248,6 +245,7 @@ public class WeatherProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -257,12 +255,14 @@ public class WeatherProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        // Student: Start by getting a writable database
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
-        // this makes delete all rows return the number of rows deleted
-        if ( null == selection ) selection = "1";
-        switch (match) {
+        if(null == selection ) {
+            selection = "1";
+        }
+        switch(match) {
             case WEATHER:
                 rowsDeleted = db.delete(
                         WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
@@ -274,9 +274,8 @@ public class WeatherProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        // Because a null deletes all rows
         if (rowsDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(uri,null);
         }
         return rowsDeleted;
     }
@@ -299,12 +298,12 @@ public class WeatherProvider extends ContentProvider {
         switch (match) {
             case WEATHER:
                 normalizeDate(values);
-                rowsUpdated = db.update(WeatherContract.WeatherEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
+                rowsUpdated = db.update(
+                        WeatherContract.WeatherEntry.TABLE_NAME, values, selection,selectionArgs);
                 break;
             case LOCATION:
-                rowsUpdated = db.update(WeatherContract.LocationEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
+                rowsUpdated = db.update(
+                        WeatherContract.LocationEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

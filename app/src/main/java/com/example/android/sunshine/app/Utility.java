@@ -48,8 +48,8 @@ public class Utility {
         return context.getString(R.string.format_temperature, temp);
     }
 
-    static String formatDate(long dateInMilliseconds) {
-        Date date = new Date(dateInMilliseconds);
+    static String formatDate(long dateInMillis) {
+        Date date = new Date(dateInMillis);
         return DateFormat.getDateInstance().format(date);
     }
 
@@ -126,13 +126,7 @@ public class Utility {
         }
     }
 
-    /**
-     * Converts db date format to the format "Month day", e.g "June 24".
-     * @param context Context to use for resource localization
-     * @param dateInMillis The db formatted date string, expected to be of the form specified
-     *                in Utility.DATE_FORMAT
-     * @return The day in the form of a string formatted "December 6"
-     */
+
     public static String getFormattedMonthDay(Context context, long dateInMillis ) {
         Time time = new Time();
         time.setToNow();
@@ -175,12 +169,6 @@ public class Utility {
         return String.format(context.getString(windFormat), windSpeed, direction);
     }
 
-    /**
-     * Helper method to provide the icon resource id according to the weather condition id returned
-     * by the OpenWeatherMap call.
-     * @param weatherId from OpenWeatherMap API response
-     * @return resource id for the corresponding icon. -1 if no relation is found.
-     */
     public static int getIconResourceForWeatherCondition(int weatherId) {
         // Based on weather code data found at:
         // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
@@ -210,12 +198,7 @@ public class Utility {
         return -1;
     }
 
-    /**
-     * Helper method to provide the art resource id according to the weather condition id returned
-     * by the OpenWeatherMap call.
-     * @param weatherId from OpenWeatherMap API response
-     * @return resource id for the corresponding icon. -1 if no relation is found.
-     */
+
     public static int getArtResourceForWeatherCondition(int weatherId) {
         // Based on weather code data found at:
         // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
