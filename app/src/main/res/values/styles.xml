@@ -5,9 +5,6 @@
         <item name="colorPrimary">@color/sunshine_blue</item>
         <item name="colorPrimaryDark">@color/sunshine_dark_blue</item>
     </style>
-    <style name="ForecastListStyle">
-
-    </style>
 
     <!-- Main activity theme. -->
     <style name="ForecastTheme" parent="AppTheme">
@@ -26,8 +23,7 @@
 
     <!-- Style for forecast listview -->
     <style name="ForecastListStyle">
-        <!-- Here it's a stub.  In screens of sufficient width, this style includes modifications
-        for two-pane layout -->
+
     </style>
 
 </resources>
